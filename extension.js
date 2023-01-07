@@ -61,6 +61,59 @@ function activate(context) {
 
 
 	});
+	context.subscriptions.push(disposable);
+	disposable = vscode.commands.registerCommand('plantuml-master.entityAddRelation', function () {
+		// 添加关系，解析当前行的实体名称，遍历文档找到其他实体的名称，然后弹出选择框，选择实体，弹出文本框，指定线条的样式，默认为空，然后添加关系
+		// 获取当前行的内容
+		let editor = vscode.window.activeTextEditor;
+		let document = editor.document;
+		let selection = editor.selection;
+		let line = document.lineAt(selection.start.line);
+		let lineText = line.text;
+		// 判断当前行是否是entity
+		let entityReg = /.*" as (\w+)/;
+		let entityMatch = lineText.match(entityReg);
+		if (entityMatch) {
+			// 获取当前行的entity名称
+			let entityName = entityMatch[1];
+			// 获取所有的实体名称
+			let entityNames = [];
+			let entityMap = {};// 行的内容到实体名称的映射，用于显示友好的提示
+			let lineCount = document.lineCount;
+			for (let i = lineCount - 1; i > -1; i--) {
+				let line = document.lineAt(i);
+				let lineText = line.text;
+
+				let entityMatch = lineText.match(entityReg);
+				if (entityMatch) {
+					// 获取实体名称
+					let entityName = entityMatch[1];
+					entityNames.push(entityName);
+					entityMap[lineText.trim()] = entityName;
+				}
+			}
+			// 弹出选择框
+			vscode.window.showQuickPick(Object.keys(entityMap)).then((value) => {
+				// 弹出文本框
+				vscode.window.showInputBox().then((value2) => {
+					// 添加关系
+					editor.edit(editBuilder => {
+						// 找到含有@enduml的行，在之前插入
+						for (let i = lineCount - 1; i > -1; i--) {
+							let line = document.lineAt(i);
+							let lineText = line.text;
+							let entityMatch = lineText.trim().indexOf('@enduml');
+							if (entityMatch > -1) {
+								editBuilder.insert(line.range.start, `${entityName} -${value2}-> ${entityMap[value]}\n\n`);
+								break;
+							}
+						}
+					});
+				});
+			});
+		}
+
+	});
 
 	context.subscriptions.push(disposable);
 }

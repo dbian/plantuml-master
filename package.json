@@ -19,7 +19,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:plantuml-master.deleteEntity"
+    "onCommand:plantuml-master.deleteEntity",
+    "onCommand:plantuml-master.entityAddRelation"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -27,6 +28,10 @@
       {
         "command": "plantuml-master.deleteEntity",
         "title": "plantuml-master: deleteEntity"
+      },
+      {
+        "command": "plantuml-master.entityAddRelation",
+        "title": "plantuml-master: entityAddRelation"
       }
     ]
   },
