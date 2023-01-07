@@ -3,6 +3,15 @@
   "displayName": "plantuml_master",
   "description": "a lot of helper utility",
   "version": "0.0.1",
+  "publisher": "godgetget",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dbian/plantuml-master.git"
+  },
+  "author": {
+    "name": "godgetget",
+    "email": "zqqbhd@icloud.com"
+  },
   "engines": {
     "vscode": "^1.74.0"
   },
@@ -10,14 +19,16 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:plantuml-master.helloWorld"
+    "onCommand:plantuml-master.deleteEntity"
   ],
   "main": "./extension.js",
   "contributes": {
-    "commands": [{
-      "command": "plantuml-master.helloWorld",
-      "title": "Hello World"
-    }]
+    "commands": [
+      {
+        "command": "plantuml-master.deleteEntity",
+        "title": "plantuml-master: deleteEntity"
+      }
+    ]
   },
   "scripts": {
     "lint": "eslint .",
